@@ -22,7 +22,7 @@ public class SecurityConfig {
 	            .csrf(Customizer.withDefaults()) 
 	            //authorizeHttpRequests: 요청하는 url에 대한 보안
 	            .authorizeHttpRequests(authorize -> authorize
-	            		.requestMatchers("/").permitAll() //인증 없이 접속 가능하다는 뜻 ("/"):경우 인덱스를 말하는것 
+	            		.requestMatchers("/","/signup").permitAll() //인증 없이 접속 가능하다는 뜻 ("/"):경우 인덱스를 말하는것 
 	            		//.requestMatchers(HttpMethod.GET,"").permitAll()
 	            		.requestMatchers("/hr/**").hasRole("HR") // 인사팀에 들어가기 위해서는 hasRole권한 -> HR 권한이 있어야함 
 	            		.requestMatchers("/admin/**").hasRole("ADMIN") //authorize=권한(role)
