@@ -11,6 +11,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class TestController {
 	
 	
+	@GetMapping("/admin")
+	public String admin(){
+		return "admin권한이 있으면 문자가 보여요";
+	}
+	
+	
 	@GetMapping("/user")
 	public String user(@AuthenticationPrincipal User user){
 		System.out.println(user.getUsername());
