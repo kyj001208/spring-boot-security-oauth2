@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum Role{
 	
+	SOCIALUSER("소셜유저"),
 	EMP("사원"),
 	MGR("매니저"),
 	ADMIN("관리자")

@@ -9,6 +9,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
@@ -23,10 +26,15 @@ public class SecurityConfig {
 	
 	private final CustomUserDetailsService customUserDetailsService;
 	private final CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
+	private final CustomOQuth2UserService customOQuth2UserService;
 	
 	//순서가 있기에 아래 순서에 맞게 진행해야함 
 	 @Bean
 	     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+		 
+
+		 
+		 
 	        http
 	        
 	        	//토큰발행은 security가 해줍니다.
@@ -65,14 +73,28 @@ public class SecurityConfig {
 	            .userDetailsService(customUserDetailsService)
 	            ;
 	        
+		 
+		 
+		 	//설정 후 아래 코드 쓰면 구글 로그인이 뜸 
+		 	http
+			
+			.oauth2Login(ouath2 ->ouath2
+					.loginPage("/login")
+					.userInfoEndpoint(userInfo->userInfo
+							.userService(customOQuth2UserService)
+							)
+					
+			)		
+			;  	
+	   	 		
+	        
+	        
+		 
 	        return http.build();
 	    }
 	 
+			
 
-
-	@Bean
-	 PasswordEncoder passwordEncoder() {
-		 return new BCryptPasswordEncoder(14);
-	 }
+	
 
 }
