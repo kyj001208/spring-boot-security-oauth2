@@ -49,35 +49,54 @@ public class CustomOQuth2UserService extends DefaultOAuth2UserService {
 		return socialUser(oAuth2User,registrationId ); //커스텀 유저 디테일즈에 포함됌
 	}
 	
+	private OAuth2User socialUser(OAuth2User oAuth2User, String registrationId) {
 
-		private OAuth2User socialUser(OAuth2User oAuth2User, String registrationId) {
-		
-		
-		String email=null;
-		String name=null;
-		if(registrationId.equals("google")) { //구글
-			
-			email=oAuth2User.getAttribute("email"); //이게 이메일 이래요
-			name=oAuth2User.getAttribute("name");
-			
-		}else if(registrationId.equals("naver")) {//네이버
-			
-			Map<String, Object>response=oAuth2User.getAttribute("response");
-			email=(String) response.get("email");
-			name=(String) response.get("name");
+		String email = null;
+
+		String name = null;
+
+		if (registrationId.equals("google")) {
+
+			email = oAuth2User.getAttribute("email");
+
+			name = oAuth2User.getAttribute("name");
+
+		} else if (registrationId.equals("naver")) {
+
+			Map<String, Object> response = oAuth2User.getAttribute("response");
+
+			email = (String) response.get("email");
+
+			name = (String) response.get("name");
+
+		} else if (registrationId.equals("kakao")) {
+
+			Map<String, Object> response = oAuth2User.getAttribute("kakao_account");
+
+			Map<String, Object> profile = (Map<String, Object>) response.get("profile");
+
+			email = (String) response.get("email");
+
+			name = (String) response.get("name");
+
 		}
-		
-		//소셜-회원가입되지 않고 소셜정보만 잇는 회원(이건 회원가입이 아닌 그냥 로그인만)
-		MemberEntity entity=MemberEntity.builder()
-				.name(email)
-				//소셜 유저는 pass워드가 의미가 없기에 이렇게 만듬(임의의 pass정보를 부여) 그리고 저장하고 싶으면 따로 만드셈 
-				//디비에 넣을 경우 소셜 유저와 일반인증에서 제외 시킨 후에 진행해야함 (회원가입 시킬 경우 소셜유저인지 일반유저인지 구분자를 만들어줘야한다)
+
+		// 회원가입되지 않고 소셜정보만 있는 회원
+
+		MemberEntity entity = MemberEntity.builder()
+
+				.email(email).name(name)
+
+				// 소셜유저는 password는 의미없지만 임의의 password를 부여한 상황임
+
 				.pass(pw.encode(String.valueOf(System.currentTimeMillis())))
-				.email(name)
+
 				.build().addRole(Role.SOCIALUSER);
-		
-		
-		return new CustomUserDetails(entity) ;
-	}
+
+		return new CustomUserDetails(entity);
+
+		}
+
+
 
 }
